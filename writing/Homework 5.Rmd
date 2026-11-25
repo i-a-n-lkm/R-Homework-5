@@ -19,9 +19,7 @@ homicides <- read_csv("../data/homicide-data.csv")
 list.files("../data")
 
 ```
-``` {r plot}
-
-#Recreate the graph shown below. It shows monthly homicides in Baltimore, with a reference added for the date of the arrest of Freddie Gray and color used to show colder months (November through April) versus warmer months (May through October). There is a smooth line added to help show seasonal and long-term trends in this data.
+```{r clean data}
 
 homicides <- homicides %>%
   #create new column by combining two existing: name it, call the columns 
@@ -32,7 +30,19 @@ homicides <- homicides %>%
   #select certain columns
   select(uid, date, victim_last, victim_first, victim_race, city_state) %>%
   #filter for just Baltimore homicides
-  filter(city_state == "Baltimore, MD")
+  filter(city_state == "Baltimore, MD") %>%
+  #overwrite homicides dataframe, add new "seasons" column
+  #make Winter= Nov-Apr, Summer= May-Oct
+  mutate(season = if_else(month(date) %in% c(11, 12, 1, 2, 3, 4), 
+      "Winter", "Summer"))
+
+```
+
+``` {r plot}
+
+#Recreate the graph shown below. It shows monthly homicides in Baltimore, with a reference added for the date of the arrest of Freddie Gray and color used to show colder months (November through April) versus warmer months (May through October). There is a smooth line added to help show seasonal and long-term trends in this data.
+
+
 
 
 ```

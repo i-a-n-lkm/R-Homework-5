@@ -9,9 +9,23 @@ date: "2026-11-11"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r list_files}
+```{r read_and_list_files}
+
+#read in files
+library(tidyverse)
+homicides <- read_csv("../data/homicide-data.csv")
 
 #list files
 list.files("../data")
+
+```
+``` {r plot}
+
+#Recreate the graph shown below. It shows monthly homicides in Baltimore, with a reference added for the date of the arrest of Freddie Gray and color used to show colder months (November through April) versus warmer months (May through October). There is a smooth line added to help show seasonal and long-term trends in this data.
+
+homicides <- homicides %>%
+  #create new column by combining two existing: name it, call the columns 
+  #to combine, specify the separator
+  unite("city_state", city:state, sep = ", ")
 
 ```

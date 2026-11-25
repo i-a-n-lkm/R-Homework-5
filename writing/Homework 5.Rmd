@@ -26,6 +26,13 @@ list.files("../data")
 homicides <- homicides %>%
   #create new column by combining two existing: name it, call the columns 
   #to combine, specify the separator
-  unite("city_state", city:state, sep = ", ")
+  unite("city_state", city:state, sep = ", ") %>%
+  #make date column date class
+  mutate(date = ymd(reported_date)) %>%
+  #select certain columns
+  select(uid, date, victim_last, victim_first, victim_race, city_state) %>%
+  #filter for just Baltimore homicides
+  filter(city_state == "Baltimore, MD")
+
 
 ```

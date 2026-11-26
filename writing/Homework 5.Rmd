@@ -55,7 +55,8 @@ month_homicides <- homicides %>%
 
 #to-do
 #figure out how to get colors by season when it's from a different dataframe. why doesn't homicides$season work?
-#make fig width larger to accommodate
+#make fig width larger to accommodate (check that this will work with the PDF by Knitting!) - it does so far
+#remove the error/CI on smooth line
 
 library(forcats)
 library(ggthemes)
@@ -65,7 +66,7 @@ library(ggplot2)
 month_homicides %>%
   ggplot(aes(x = month_year, y = event_count)) +
   geom_col() +
-  geom_smooth(span = 0.1) +
+  geom_smooth(span = 0.1, se = FALSE) +
   # red line for Freddie Gray arrest + annotation
   geom_vline(xintercept = ymd("2015-04-12"), color = "red", linetype = "dashed", linewidth = 1) +
   annotate("text", x = ymd("2015-03-01"), y = 40, 

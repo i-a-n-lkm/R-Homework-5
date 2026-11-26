@@ -48,17 +48,30 @@ month_homicides <- homicides %>%
 
 #Recreate the graph shown below. It shows monthly homicides in Baltimore, with a reference added for the date of the arrest of Freddie Gray and color used to show colder months (November through April) versus warmer months (May through October). There is a smooth line added to help show seasonal and long-term trends in this data.
 
+#to-do
+#make smooth line more responsive
+#should I use loess method for smooth line? can't tell until you fix below problem
+#remove the extra layers of bars
+#make sure we're only counting month by year, not every month count for every january (which is what you're doing now) this is why y-axis looks so bad, should only go to 40, these are duplicates
+#put legend on the bottom
+#make fig width larger to accommodate
+
 library(forcats)
 library(ggthemes)
+library(scales)
 
 month_homicides %>%
-  ggplot(aes(x = month_count, y = year(date))) +
-  geom_bar(color = seasons) +
-  geom_smooth() +
+  ggplot(aes(x = date, y = month_count)) +
+  geom_col(aes(fill = season)) +
+  geom_smooth(span = 0.3) +
+  geom_vline(xintercept = ymd("2015-04-12"), color = "red", linetype = "dashed", linewidth = 1) +
+  annotate("text", x = ymd("2015-03-01"), y = 40, label = "Arrest of\nFreddie Gray", color = "gray90", hjust = 1, size = 3.8, lineheight = 0.95) +
   labs(title = "Homicides in Baltimore, MD", 
        y = "Monthly homicides",
        x = "Date") +
-  theme_dark()
-
+  theme_dark() +
+  #custom fill colors and x-axis 2-year breaks
+  scale_fill_manual(values = c("Summer" = "lightgray", "Winter" = "lightblue")) +
+  scale_x_date(date_breaks = "2 years", date_labels = "%Y")
 
 ```

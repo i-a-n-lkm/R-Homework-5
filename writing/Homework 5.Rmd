@@ -53,23 +53,28 @@ month_homicides <- homicides %>%
 #should I use loess method for smooth line? can't tell until you fix below problem
 #remove the extra layers of bars
 #make sure we're only counting month by year, not every month count for every january (which is what you're doing now) this is why y-axis looks so bad, should only go to 40, these are duplicates
-#put legend on the bottom
 #make fig width larger to accommodate
 
 library(forcats)
 library(ggthemes)
 library(scales)
+library(ggplot2)
 
 month_homicides %>%
   ggplot(aes(x = date, y = month_count)) +
   geom_col(aes(fill = season)) +
   geom_smooth(span = 0.3) +
+  #red line for Freddie Gray arrest + annotation
   geom_vline(xintercept = ymd("2015-04-12"), color = "red", linetype = "dashed", linewidth = 1) +
-  annotate("text", x = ymd("2015-03-01"), y = 40, label = "Arrest of\nFreddie Gray", color = "gray90", hjust = 1, size = 3.8, lineheight = 0.95) +
+  annotate("text", x = ymd("2015-03-01"), y = 40, 
+           label = "Arrest of\nFreddie Gray", color = "gray90", hjust = 1, size = 3.8, lineheight = 0.95) +
+  #labels
   labs(title = "Homicides in Baltimore, MD", 
        y = "Monthly homicides",
        x = "Date") +
   theme_dark() +
+  #put legend in bottom position
+  theme(legend.position = "bottom") +
   #custom fill colors and x-axis 2-year breaks
   scale_fill_manual(values = c("Summer" = "lightgray", "Winter" = "lightblue")) +
   scale_x_date(date_breaks = "2 years", date_labels = "%Y")

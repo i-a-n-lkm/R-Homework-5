@@ -30,17 +30,20 @@ homicides <- homicides %>%
   #make Winter= Nov-Apr, Summer= May-Oct
   mutate(date = ymd(reported_date),
          season = if_else(month(date) %in% c(11, 12, 1, 2, 3, 4),"Winter", "Summer"),
-         n = n()) %>%
-  #select certain columns
-  select(uid, date, season, n, victim_last, victim_first, victim_race, city_state) %>%
+         year = year(date), 
+         month = month(date)) %>%
   #filter for just Baltimore homicides
-  filter(city_state == "Baltimore, MD")
-
-month_homicides <- homicides %>%
-  group_by(month = month(date)) %>%
+  filter(city_state == "Baltimore, MD") %>%
+  #group by month to find counts
+  group_by(year, month) %>%
   mutate(month_count = n()) %>%
   ungroup()
 
+homicides <- homicides %>%
+  select(year, month, season, month_count)
+
+month_homicides <- homicides %>%
+  distinct(year, month, season, month_count)
 
 ```
 
@@ -61,9 +64,9 @@ library(scales)
 library(ggplot2)
 
 month_homicides %>%
-  ggplot(aes(x = date, y = month_count)) +
-  geom_col(aes(fill = season)) +
-  geom_smooth(span = 0.3) +
+  ggplot(aes(x = homicides$date, y = month_count)) +
+  geom_col(aes(x = homicides$date, y = month_count, fill = month_homicides$season)) +
+  # geom_smooth(span = 0.3) +
   #red line for Freddie Gray arrest + annotation
   geom_vline(xintercept = ymd("2015-04-12"), color = "red", linetype = "dashed", linewidth = 1) +
   annotate("text", x = ymd("2015-03-01"), y = 40, 

@@ -39,11 +39,13 @@ homicides <- homicides %>%
   mutate(month_count = n()) %>%
   ungroup()
 
-homicides <- homicides %>%
-  select(year, month, season, month_count)
-
 month_homicides <- homicides %>%
-  distinct(year, month, season, month_count)
+  #round each date to the first day of its month using floor_date
+  mutate(month_year = floor_date(date, unit = "month")) %>%
+  #count rows for each month/year combination (NOT every month regardless of year!)
+  count(month_year, name = "event_count")
+
+
 
 ```
 
@@ -52,10 +54,7 @@ month_homicides <- homicides %>%
 #Recreate the graph shown below. It shows monthly homicides in Baltimore, with a reference added for the date of the arrest of Freddie Gray and color used to show colder months (November through April) versus warmer months (May through October). There is a smooth line added to help show seasonal and long-term trends in this data.
 
 #to-do
-#make smooth line more responsive
-#should I use loess method for smooth line? can't tell until you fix below problem
-#remove the extra layers of bars
-#make sure we're only counting month by year, not every month count for every january (which is what you're doing now) this is why y-axis looks so bad, should only go to 40, these are duplicates
+#figure out how to get colors by season when it's from a different dataframe. why doesn't homicides$season work?
 #make fig width larger to accommodate
 
 library(forcats)
@@ -64,10 +63,10 @@ library(scales)
 library(ggplot2)
 
 month_homicides %>%
-  ggplot(aes(x = homicides$date, y = month_count)) +
-  geom_col(aes(x = homicides$date, y = month_count, fill = month_homicides$season)) +
-  # geom_smooth(span = 0.3) +
-  #red line for Freddie Gray arrest + annotation
+  ggplot(aes(x = month_year, y = event_count)) +
+  geom_col() +
+  geom_smooth(span = 0.1) +
+  # red line for Freddie Gray arrest + annotation
   geom_vline(xintercept = ymd("2015-04-12"), color = "red", linetype = "dashed", linewidth = 1) +
   annotate("text", x = ymd("2015-03-01"), y = 40, 
            label = "Arrest of\nFreddie Gray", color = "gray90", hjust = 1, size = 3.8, lineheight = 0.95) +

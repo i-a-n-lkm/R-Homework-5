@@ -1,5 +1,5 @@
 ---
-title: "Homework 5"
+title: "ERHS 535 R Programming for Research: Homework 5"
 subtitle: "Ian McKinzey"
 output: pdf_document
 date: "2026-11-11"

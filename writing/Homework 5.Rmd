@@ -6,7 +6,10 @@ date: "2026-11-11"
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+knitr::opts_chunk$set(echo = TRUE, 
+                      message = FALSE, 
+                      warning = FALSE, 
+                      error = FALSE)
 ```
 
 # Read in File
@@ -33,7 +36,8 @@ homicides <- homicides %>%
   #overwrite homicides dataframe, add new "seasons" column
   #make Winter= Nov-Apr, Summer= May-Oct
   mutate(date = ymd(reported_date),
-         season = if_else(month(date) %in% c(11, 12, 1, 2, 3, 4),"Winter", "Summer"),
+         season = if_else(month(date) %in% c(11, 12, 1, 2, 3, 4),
+                          "Winter", "Summer"),
          year = year(date), 
          month = month(date)) %>%
   #filter for just Baltimore homicides
@@ -48,7 +52,8 @@ month_homicides <- homicides %>%
   mutate(month_year = floor_date(date, unit = "month")) %>%
   #KEEP season so that you can use it in ggplot later
   group_by(month_year, season) %>%
-  #count rows for each month/year combination (NOT every month regardless of year!)
+  #count rows for each month/year combination 
+  #(NOT every month regardless of year!)
   summarize(event_count = n(), .groups = "drop")
 
 
@@ -59,7 +64,10 @@ month_homicides <- homicides %>%
 
 ``` {r plot, fig.width=9, fig.height=3}
 
-#Recreate a graph: show monthly homicides in Baltimore, with a reference added for the date of the arrest of Freddie Gray and color used to show colder months (November through April) versus warmer months (May through October). Add a smooth line added to help show seasonal and long-term trends in this data.
+#Recreate a graph: show monthly homicides in Baltimore, with a reference added
+#for the date of the arrest of Freddie Gray, use color for colder months
+#(November through April) versus warmer months (May through October). Add a 
+#smooth line added to help show seasonal and long-term trends in this data.
 
 library(forcats)
 library(ggthemes)
@@ -70,13 +78,17 @@ month_homicides %>%
   ggplot(aes(x = month_year, y = event_count, fill = season)) +
   geom_col() +
   #add smooth line that is reactive to small changes, w/o SE shading
-  #group = 1 to ignore the seasonal group (so that you get only one smooth line)
+  #group = 1 to ignore seasonal group (so that you get only one smooth line)
   #exclude it from legend so that it only shows the colors, not the line
   geom_smooth(aes(group = 1), span = 0.1, se = FALSE, show.legend = FALSE) +
   # red line for Freddie Gray arrest + annotation
-  geom_vline(xintercept = ymd("2015-04-12"), color = "red", linetype = "dashed", linewidth = 1) +
+  geom_vline(xintercept = ymd("2015-04-12"), 
+             color = "red", 
+             linetype = "dashed", 
+             linewidth = 1) +
   annotate("text", x = ymd("2015-03-01"), y = 40, 
-           label = "Arrest of\nFreddie Gray", color = "gray90", hjust = 1, size = 3.8, lineheight = 0.95) +
+           label = "Arrest of\nFreddie Gray", 
+           color = "gray90", hjust = 1, size = 3.8, lineheight = 0.95) +
   #labels, no title for legend
   labs(title = "Homicides in Baltimore, MD", 
        y = "Monthly homicides",

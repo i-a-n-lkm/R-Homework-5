@@ -68,7 +68,7 @@ month_homicides %>%
   geom_col() +
   # add smooth line that is reactive to small changes, w/o SE shading
   # group = 1 to ignore the seasonal group (so that you get only one smooth line)
-  geom_smooth(aes(group = 1), span = 0.1, se = FALSE) +
+  geom_smooth(aes(group = 1), span = 0.1, se = FALSE, show.legend = FALSE) +
   # red line for Freddie Gray arrest + annotation
   geom_vline(xintercept = ymd("2015-04-12"), color = "red", linetype = "dashed", linewidth = 1) +
   annotate("text", x = ymd("2015-03-01"), y = 40, 
@@ -76,7 +76,8 @@ month_homicides %>%
   #labels
   labs(title = "Homicides in Baltimore, MD", 
        y = "Monthly homicides",
-       x = "Date") +
+       x = "Date",
+       fill = "") +
   theme_dark() +
   #put legend in bottom position
   theme(legend.position = "bottom") +

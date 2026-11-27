@@ -6,8 +6,10 @@ date: "2026-11-11"
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ```
+
+# Read in File
 
 ```{r read_and_list_files}
 
@@ -19,6 +21,8 @@ homicides <- read_csv("../data/homicide-data.csv")
 list.files("../data")
 
 ```
+# Clean Data
+
 ```{r clean data}
 
 homicides <- homicides %>%
@@ -50,6 +54,8 @@ month_homicides <- homicides %>%
 
 
 ```
+
+# Create a Plot
 
 ``` {r plot, fig.width=9, fig.height=3}
 
